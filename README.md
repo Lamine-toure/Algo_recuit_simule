@@ -49,7 +49,7 @@ EPICTETE
 ```
 ## Librairies à installé
 ```bash
-pip install numpy matplotlib time random
+pip install numpy matplotlib random
 ```
 
 ##  References
