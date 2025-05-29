@@ -1,68 +1,60 @@
-# 🔐 Déchiffrement de message par Recuit Simulé
+# 🔐 Déchiffrement d’un code secret par recuit simulé
 
-Ce projet implémente un **algorithme de recuit simulé** pour déchiffrer un message chiffré monoalphabétiquement, en utilisant une **matrice de probabilités de transitions entre lettres**.
+Ce projet implémente un **algorithme de recuit simulé** pour déchiffrer un message chiffré monoalphabétiquement, en utilisant une **matrice de probabilités de transitions entre lettres** (bigrammes).
 
 ---
 
-## 📌 Objectif
+## 🧠 Contexte
 
-L'objectif est de retrouver le message d'origine en trouvant une **permutation de l'alphabet** qui maximise la **vraisemblance statistique** du message déchiffré selon une matrice de transition issue de textes en français.
+Vous trouvez un message chiffré :
+
+
+On suppose qu’il s’agit d’un **chiffrement par substitution monoalphabétique**, où chaque lettre (et l’espace) a été remplacée par une autre, de manière fixe.  
+Il existe alors **27! ≈ 10²⁸ permutations possibles**. Une attaque par force brute est donc irréaliste.
+
+On pourrait aussi utiliser la fréquence des lettres (par exemple, l’espace ≈ 17.4 %, E ≈ 12.1 % en français), mais ce message est trop court pour rendre ces statistiques fiables.
+
+Une approche plus robuste consiste à **exploiter les fréquences des paires de lettres (bigrammes)**, en construisant un score basé sur une **matrice de transition**.
 
 ---
 
 ## 📦 Fichiers
 
-- `transitions_alphabets.txt` : Matrice 27x27 des probabilités de transition entre lettres (A-Z + espace).
-- `MSG.txt` : Fichier contenant le message chiffré.
-- `Recuit_simule.ipynb` : Script principal implémentant l'algorithme.
+| Fichier                      | Description                                                         |
+|-----------------------------|---------------------------------------------------------------------|
+| `transitions_alphabets.txt` | Matrice 27×27 des probabilités de transitions (A–Z + espace).        |
+| `MSG.txt`                   | Fichier contenant le message chiffré.                               |
+| `Recuit_simule.ipynb`       | Script principal contenant l’implémentation du recuit simulé.       |
 
 ---
 
-## 🔍 Description de l'algorithme
+## 🔍 Description de l’algorithme
 
-L'algorithme utilise la **technique de recuit simulé** (Simulated Annealing) pour optimiser une permutation de l'alphabet qui déchiffre au mieux le message.
+L'algorithme utilise la méthode du **recuit simulé (Simulated Annealing)** pour optimiser une permutation de l’alphabet.
 
-### Étapes clés :
+### 🧮 Fonction objectif : log-vraisemblance
 
-1. **Initialisation** :
-   - Une permutation aléatoire de l'alphabet est générée.
-   - Un message chiffré est donné sous forme de liste de lettres majuscules.
+On cherche à maximiser la **log-vraisemblance** du message déchiffré avec une permutation :
 
-2. **Énergie (fonction objectif)** :
-   - On déchiffre le message selon la permutation actuelle.
-   - On calcule la **log-vraisemblance** du texte déchiffré avec la matrice de transition :
+```math
+V = \frac{1}{N} \sum_{i=1}^{N-1} \log(P(c_i \to c_{i+1}))
+```
 
-    ```text  
-     $ V = (1 / N) * Σ_{i=1}^{N-1} log(P(c_i → c_{i+1}))$  avec une petite constante ajoutée pour éviter log(0).
+```bash
+Potentiel du message décodé : -2.0975792909151565
 
-3. **Recuit simulé** :
-   - À chaque itération, deux lettres de la permutation sont échangées pour former un nouvel état.
-   - Ce nouvel état est accepté :
-     - Toujours, s'il améliore l'énergie.
-     - Sinon, avec une probabilité décroissante selon une température :
-    
-        ```text
-       T = \frac{h}{\log(i + 2)}
+Message décodé :
+NE DEMANDE POINT QUE LES CHOSES ARRIVENT COMME TU LES DESIRES MAIS DESIRE QU ELLES ARRIVENT COMME ELLES ARRIVENT ET TU PROSPERERAS TOUJOURS 
+EPICTETE
+```
+## Librairies à installé
+```bash
+pip install numpy matplotlib time random
+```
 
-     - Cela permet d’échapper aux minima locaux.
+##  References
+- L'article Diaconis, P.(2009). The markove chaine monte carlo revolution. Bulletin of the American Mathematical Society, 42(2) 179-205.
+- [Recuit simulé](https://fr.wikipedia.org/wiki/Recuit_simul%C3%A9)
 
-4. **Critère d'arrêt** :
-   - L'algorithme s'arrête après `max_iter` itérations ou dès que l’énergie dépasse un seuil (`-2.12` dans notre cas).
+- [Chaine TouTube de David Louapre](https://www.youtube.com/watch?v=z4tkHuWZbRA&t=415s&ab_channel=ScienceEtonnante)
 
----
-
-## 📊 Visualisations
-
-- **Évolution de l'énergie** :
-  Visualisation de la convergence de l’algorithme.
-
-- **Température** :
-  Courbe décroissante montrant le refroidissement simulé.
-
----
-
-## 📈 Résultat
-
-```text
-Potentiel du message décodé via la dernière permutation est : -2.0975792909151565
- Le Message décodé est --> NE DEMANDE POINT QUE LES CHOSES ARRIVENT COMME TU LES DESIRES MAIS DESIRE QU ELLES ARRIVENT COMME ELLES ARRIVENT ET TU PROSPERERAS TOUJOURS EPICTETE
