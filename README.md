@@ -6,7 +6,7 @@ Ce projet implémente un **algorithme de recuit simulé** pour déchiffrer un me
 
 ## 🧠 Contexte
 
-Vous trouvez un message chiffré :
+Vous trouvez un message chiffré :  FRNBRJMFBRNQXHFYNWSRNKRDNZLXDRDNMOOHCRFYNZXJJRNYSNKRDNBRDHORDNJMHDNBRDHORNWSNRKKRDNMOOHCRFYNZXJJRNRKKRDNMOOHCRFYNRYNYSNQOXDQROROMDNYXSVXSODNRQHZYRYR
 
 
 On suppose qu’il s’agit d’un **chiffrement par substitution monoalphabétique**, où chaque lettre (et l’espace) a été remplacée par une autre, de manière fixe.  
